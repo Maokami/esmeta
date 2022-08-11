@@ -34,7 +34,8 @@ trait LAParsers extends Lexer {
       val base =
         if (possibleEmpty) phrase(empty)
         else failed
-      val t = TERMINAL.filter(ts contains _)
+      val t = ts.foldLeft[Parser[String]](failed)(_ ||| _)
+      // val t = TERMINAL.filter(ts contains _)
       record(
         nts.foldLeft(base | t)(_ | _._2),
         rawIn.asInstanceOf[EPackratReader[Char]],
